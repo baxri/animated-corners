@@ -50,6 +50,9 @@ export default class FacebookHeads extends Component {
 
                 this.state.heads.map(({ animation }) => {
                     animation.extractOffset();
+                    // setValue Animated bug fix
+                    animation.setValue({ x: 0, y: 0 });
+
                 });
             },
             onPanResponderMove: (evt, { dx, dy }) => {
@@ -61,7 +64,7 @@ export default class FacebookHeads extends Component {
                     x: dx,
                     y: dy,
                 });
-            
+
                 this.state.heads.slice(1).map(({ animation }, index) => {
 
                     Animated.sequence([
