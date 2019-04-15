@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Animated, Dimensions } from 'react-native';
 
 import Corners from "./components/Corners";
 import FacebookHeads from "./components/FacebookHeads";
+import KittenCards from "./components/KittenCards";
 
 export default class App extends React.Component {
   render() {
@@ -12,7 +13,8 @@ export default class App extends React.Component {
       <View style={styles.container}>
 
         {/* <Corners / */}
-        <FacebookHeads />
+        {/* <FacebookHeads /> */}
+        <KittenCards />
 
       </View>
     );

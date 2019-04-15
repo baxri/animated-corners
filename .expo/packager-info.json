@@ -2,8 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 42875,
-  "expoServerNgrokUrl": "https://cm-6a6.baxri.animated-corners.exp.direct",
-  "packagerNgrokUrl": "https://packager.cm-6a6.baxri.animated-corners.exp.direct",
-  "ngrokPid": 42921
+  "packagerPid": 35102,
+  "expoServerNgrokUrl": "https://3g-3bb.baxri.animated-corners.exp.direct",
+  "packagerNgrokUrl": "https://packager.3g-3bb.baxri.animated-corners.exp.direct",
+  "ngrokPid": 35129,
+  "webpackServerPort": null
 }
