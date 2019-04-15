@@ -62,33 +62,97 @@ export default class KittenCards extends Component {
                 null,
                 {
                     dx: this.state.animation.x,
-                    dy: this.state.animation.y
+                    // dy: this.state.animation.y
                 }
             ]),
 
-            onPanResponderRelease: (evt, gestureState) => {
+            onPanResponderRelease: (evt, { dx, vx, vy }) => {
                 // The user has released all touches while this view is the
                 // responder. This typically means a gesture has succeeded
+
+
+                if (Math.abs(dx) < SWIPE_THRESHOLD) {
+                    Animated.spring(this.state.animation, {
+                        toValue: { x: 0, y: 0 }
+                    }).start();
+                } else {
+
+                    let final = 0;
+
+                    if (dx > 0) {
+                        final = 200;
+                    } else {
+                        final = -200;
+                    }
+
+                    Animated.decay(this.state.animation, {
+                        velocity: { x: final, y: vy },
+                        deceleration: .50
+                    }).start(this.transitionNext);
+                }
+
             },
 
         });
     }
 
+    transitionNext = () => {
+        this.setState({ items: this.state.items.slice(1) }, () => {
+            this.state.animation.setValue({ x: 0, y: 0 })
+        });
+    }
+
     render() {
+
+        const { animation } = this.state;
+
+        const rotate = animation.x.interpolate({
+            inputRange: [-200, 0, 200],
+            outputRange: ['-30deg', '0deg', '30deg'],
+            // extrapolate: 'clamp',
+        });
+
+        const opacity = animation.x.interpolate({
+            inputRange: [-200, 0, 200],
+            outputRange: [.5, 1, .5],
+            // extrapolate: 'clamp',
+        });
+
+        const animatedCardStyle = {
+            opacity: this.state.opacity,
+            transform: [{
+                rotate
+            },
+            ...this.state.animation.getTranslateTransform()
+            ]
+        };
+
+        const animatedImageStyle = {
+            opacity,
+        };
+
         return (
             <View style={styles.container}>
                 <View style={styles.top}>
 
                     {
                         this.state.items.slice(0, 2).reverse().map(({ image, id, text }, index, items) => {
-                            return (<Animated.View key={id} style={[styles.card]}>
+
+                            const isLastItem = index === items.length - 1;
+                            const panHandlers = isLastItem ? this._panResponder.panHandlers : {};
+
+                            const cardStyle = isLastItem ? animatedCardStyle : undefined;
+                            const imageStyle = isLastItem ? animatedImageStyle : undefined;
+
+                            return (<Animated.View key={id} style={[styles.card, cardStyle]}>
                                 <Animated.Image
                                     source={image}
                                     resizeMode="cover"
-                                    style={[styles.image]}
+                                    style={[styles.image, imageStyle]}
+                                    {...panHandlers}
                                 />
-                                <View>
-                                    <Text style={[styles.lowerText]}>{text}</Text>
+                                <View style={[styles.lowerText]}>
+                                    <Text >{text}</Text>
                                 </View>
                             </Animated.View>)
                         })
@@ -120,6 +184,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
+        flex: 1,
         width: 300,
         height: 300,
         position: 'absolute',
@@ -135,12 +200,12 @@ const styles = StyleSheet.create({
     image: {
         width: null,
         height: null,
-        flex: 3,
+        flex: 0.8,
         borderRadius: 2,
     },
 
     lowerText: {
-        flex: 1,
+        flex: 0.2,
         backgroundColor: '#FFF',
         padding: 5,
     }
