@@ -85,6 +85,7 @@ export default class KittenCards extends Component {
                         final = -200;
                     }
 
+                    
                     Animated.decay(this.state.animation, {
                         velocity: { x: final, y: vy },
                         deceleration: .50
